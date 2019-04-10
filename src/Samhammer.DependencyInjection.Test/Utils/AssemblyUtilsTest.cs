@@ -1,4 +1,7 @@
-﻿using Samhammer.DependencyInjection.Utils;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using FluentAssertions;
+using Samhammer.DependencyInjection.Utils;
 using Xunit;
 
 namespace Samhammer.DependencyInjection.Test.Utils
@@ -9,10 +12,9 @@ namespace Samhammer.DependencyInjection.Test.Utils
         public void LoadAllAssembliesOfProject()
         {
             var result = AssemblyUtils.LoadAllAssembliesOfProject();
-            var assemblyUtils = typeof(AssemblyUtils).Assembly;
-            var assemblyUtilsTest = typeof(AssemblyUtilsTest).Assembly;
-            Assert.Contains(assemblyUtils, result);
-            Assert.Contains(assemblyUtilsTest, result);
+            var expected = new List<Assembly> { typeof(AssemblyUtils).Assembly, typeof(AssemblyUtilsTest).Assembly };
+
+            result.Should().BeEquivalentTo(expected);
         }
     }
 }
