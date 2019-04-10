@@ -19,8 +19,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Samhammer.DependencyInjection.Abstractions\Samhammer.DependencyInjection.Abstractions.csproj" />
-  </ItemGroup>
-
 </Project>
