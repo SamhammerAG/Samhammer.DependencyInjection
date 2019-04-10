@@ -5,7 +5,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Samhammer.DependencyInjection.Abstractions;
-using Samhammer.Utils.Reflection;
+using Samhammer.DependencyInjection.Utils;
 
 namespace Samhammer.DependencyInjection
 {
