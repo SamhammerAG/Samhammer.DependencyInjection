@@ -9,69 +9,30 @@ namespace Samhammer.DependencyInjection.Test.Utils
 {
     public class ReflectionUtilsTest
     {
-        [Fact]
-        public void FindAllExportedTypesWithAttribute()
+        [Theory]
+        [InlineData(typeof(ClassAttribute), true, new[] { typeof(TestClass), typeof(ChildOfTestClass) })]
+        [InlineData(typeof(ClassAttribute), false, new[] { typeof(TestClass) })]
+        public void FindAllExportedTypesWithAttribute(Type attribute, bool inherit, IEnumerable<Type> expectedTypes)
         {
             var assemblies = new[] { typeof(ReflectionUtilsTest).Assembly };
-            var attribute = typeof(TestAttribute);
 
-            var result = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, attribute);
+            var result = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, attribute, inherit);
 
-            Assert.Contains(typeof(FirstClass), result);
-            Assert.Contains(typeof(FirstClassChild), result);
-            Assert.DoesNotContain(typeof(SecondClass), result);
+            result.Should().BeEquivalentTo(expectedTypes);
         }
 
-        [Fact]
-        public void FindAllExportedTypesWithParentType()
+        [Theory]
+        [InlineData(typeof(TestClass), new[] { typeof(ChildOfTestClass) })]
+        [InlineData(typeof(IInterface), new[] { typeof(TestClass), typeof(ChildOfTestClass) })]
+        [InlineData(typeof(IInterfaceGeneric<TestClass>), new[] { typeof(TestClass), typeof(ChildOfTestClass) })]
+        [InlineData(typeof(IInterfaceGeneric<>), new[] { typeof(TestClass), typeof(ChildOfTestClass) })]
+        public void FindAllExportedTypesWithParentType(Type parentType, IEnumerable<Type> expectedTypes)
         {
             var assemblies = new[] { typeof(ReflectionUtilsTest).Assembly };
-            var parentType = typeof(FirstClass);
 
             var result = ReflectionUtils.FindAllExportedTypesWithParentType(assemblies, parentType);
 
-            Assert.Contains(typeof(FirstClassChild), result);
-            Assert.DoesNotContain(typeof(FirstClass), result);
-            Assert.DoesNotContain(typeof(SecondClass), result);
-        }
-
-        [Fact]
-        public void FindAllExportedTypesWithInterface()
-        {
-            var assemblies = new[] { typeof(ReflectionUtilsTest).Assembly };
-            var parentType = typeof(IFirst);
-
-            var result = ReflectionUtils.FindAllExportedTypesWithParentType(assemblies, parentType);
-
-            Assert.Contains(typeof(FirstClass), result);
-            Assert.Contains(typeof(FirstClassChild), result);
-            Assert.DoesNotContain(typeof(SecondClass), result);
-        }
-
-        [Fact]
-        public void FindAllExportedTypesWithInterfaceGeneric()
-        {
-            var assemblies = new[] { typeof(ReflectionUtilsTest).Assembly };
-            var parentType = typeof(IFirstGeneric<FirstClass>);
-
-            var result = ReflectionUtils.FindAllExportedTypesWithParentType(assemblies, parentType);
-
-            Assert.Contains(typeof(FirstClass), result);
-            Assert.Contains(typeof(FirstClassChild), result);
-            Assert.DoesNotContain(typeof(SecondClass), result);
-        }
-
-        [Fact]
-        public void FindAllExportedTypesWithInterfaceGenericDefinition()
-        {
-            var assemblies = new[] { typeof(ReflectionUtilsTest).Assembly };
-            var parentType = typeof(IFirstGeneric<>);
-
-            var result = ReflectionUtils.FindAllExportedTypesWithParentType(assemblies, parentType);
-
-            Assert.Contains(typeof(FirstClass), result);
-            Assert.Contains(typeof(FirstClassChild), result);
-            Assert.DoesNotContain(typeof(SecondClass), result);
+            result.Should().BeEquivalentTo(expectedTypes);
         }
 
         [Fact]
@@ -106,30 +67,41 @@ namespace Samhammer.DependencyInjection.Test.Utils
         }
     }
 
-#pragma warning disable CS0414, SA1401, SA1402
+#pragma warning disable CS0414, SA1401, SA1402, IDE0044
     [AttributeUsage(AttributeTargets.Class)]
-    public class TestAttribute : Attribute
+    public class ClassAttribute : Attribute
     {
     }
 
-    public interface IFirst
+    [AttributeUsage(AttributeTargets.Interface)]
+    public class InterfaceAttribute : Attribute
     {
     }
 
-    public interface IFirstGeneric<T>
+    public interface IInterface
     {
     }
 
-    [Test]
-    public class FirstClass : IFirst, IFirstGeneric<FirstClass>
+    // ReSharper disable once UnusedTypeParameter
+    public interface IInterfaceGeneric<T>
     {
     }
 
-    public class FirstClassChild : FirstClass
+    [Interface]
+    public interface IInterfaceWithAttribute
     {
     }
 
-    public class SecondClass
+    public interface IChildOfInterfaceWithAttribute : IInterfaceWithAttribute
+    {
+    }
+
+    [Class]
+    public class TestClass : IInterface, IInterfaceGeneric<TestClass>, IInterfaceWithAttribute
+    {
+    }
+
+    public class ChildOfTestClass : TestClass
     {
     }
 
@@ -164,5 +136,5 @@ namespace Samhammer.DependencyInjection.Test.Utils
         private static string privateStaticStringVarName = "PrivateStaticStringVarName";
         private string privateStringVarName = "PrivateStringVarName";
     }
-#pragma warning restore CS0414, SA1401, SA1402
+#pragma warning restore CS0414, SA1401, SA1402, IDE0044
 }
