@@ -10,8 +10,9 @@ namespace Samhammer.DependencyInjection.Test.Utils
     public class ReflectionUtilsTest
     {
         [Theory]
-        [InlineData(typeof(ClassAttribute), true, new[] { typeof(TestClass), typeof(ChildOfTestClass) })]
-        [InlineData(typeof(ClassAttribute), false, new[] { typeof(TestClass) })]
+        [InlineData(typeof(ClassAttribute), true, new[] { typeof(TestClass), typeof(ChildOfTestClass), typeof(TestClass2) })]
+        [InlineData(typeof(ClassAttribute), false, new[] { typeof(TestClass), typeof(TestClass2) })]
+        [InlineData(typeof(Class2Attribute), false, new[] { typeof(TestClass2) })]
         public void FindAllExportedTypesWithAttribute(Type attribute, bool inherit, IEnumerable<Type> expectedTypes)
         {
             var assemblies = new[] { typeof(ReflectionUtilsTest).Assembly };
@@ -73,6 +74,10 @@ namespace Samhammer.DependencyInjection.Test.Utils
     {
     }
 
+    public class Class2Attribute : ClassAttribute
+    {
+    }
+
     [AttributeUsage(AttributeTargets.Interface)]
     public class InterfaceAttribute : Attribute
     {
@@ -102,6 +107,11 @@ namespace Samhammer.DependencyInjection.Test.Utils
     }
 
     public class ChildOfTestClass : TestClass
+    {
+    }
+
+    [Class2]
+    public class TestClass2
     {
     }
 
