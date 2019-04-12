@@ -4,13 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Samhammer.DependencyInjection.Abstractions
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class InjectAttribute : Attribute
+    public class InjectAttribute : DependencyInjectionAttribute
     {
-        public ServiceLifetime LifeTime { get; set; }
-
         public InjectAttribute(ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            : base(lifetime)
         {
-            LifeTime = lifetime;
         }
     }
 }
