@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Abstractions;
-using Samhammer.DependencyInjection.Utils;
+using Samhammer.DependencyInjection.Providers;
 
 namespace Samhammer.DependencyInjection
 {
@@ -13,11 +10,14 @@ namespace Samhammer.DependencyInjection
     {
         private ILogger<DependencyResolver> Logger { get; }
 
+        private List<IServiceDescriptorProvider> Providers { get; }
+
         private readonly object lockObject = new object();
 
-        public DependencyResolver(ILogger<DependencyResolver> logger)
+        public DependencyResolver(ILogger<DependencyResolver> logger, IEnumerable<IServiceDescriptorProvider> providers)
         {
             Logger = logger;
+            Providers = providers.ToList();
         }
 
         public void ResolveDependencies(IServiceCollection services)
@@ -26,77 +26,40 @@ namespace Samhammer.DependencyInjection
 
             lock (lockObject)
             {
-                var assemblies = AssemblyUtils.LoadAllAssembliesOfProject();
-                Logger.LogTrace("Loaded assemblies: {Assemblies}.", assemblies.Select(a => a.GetName().Name));
-
-                var types = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(InjectAttribute));
-                Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}.", typeof(InjectAttribute), types);
-
-                var factoryTypes = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(FactoryAttribute));
-                Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}.", typeof(FactoryAttribute), types);
-
-                foreach (var type in types)
-                {
-                    ResolveService(services, type);
-                }
-
-                foreach (var type in factoryTypes)
-                {
-                    ResolveServiceFactory(services, type);
-                }
+                var serviceDescriptors = ResolveServices();
+                RegisterServices(services, serviceDescriptors);
             }
 
             Logger.LogInformation("Finished service initialization");
         }
 
-        public void ResolveService(IServiceCollection services, Type implementationType)
+        private IEnumerable<ServiceDescriptor> ResolveServices()
         {
-            var injectAttribute = implementationType.GetTypeInfo().GetCustomAttribute<InjectAttribute>(true);
-            var serviceTypes = implementationType.GetInterfaces().ToList();
-
-            if (serviceTypes.Count == 0)
+            foreach (var provider in Providers)
             {
-                Logger.LogWarning("Implementation {ServiceImpl} has no interfaces defined", implementationType);
-            }
-
-            foreach (var serviceType in serviceTypes)
-            {
-                var serviceDescriptor = new ServiceDescriptor(serviceType, implementationType, injectAttribute.LifeTime);
-                services.Add(serviceDescriptor);
-                Logger.LogDebug("Added service {Service} with implementation {ServiceImpl} and lifetime {LifeTime}", serviceType, implementationType, injectAttribute.LifeTime);
+                var descriptors = provider.ResolveServices();
+                foreach (var serviceDescriptor in descriptors)
+                {
+                    yield return serviceDescriptor;
+                }
             }
         }
 
-        public void ResolveServiceFactory(IServiceCollection services, Type factoryType)
+        private void RegisterServices(IServiceCollection services, IEnumerable<ServiceDescriptor> serviceDescriptors)
         {
-            var factoryAttribute = factoryType.GetTypeInfo().GetCustomAttribute<FactoryAttribute>(true);
-            var factoryMethods = GetFactoryMethods(factoryType);
-
-            foreach (var factoryMethod in factoryMethods)
+            foreach (var serviceDescriptor in serviceDescriptors)
             {
-                var serviceType = factoryMethod.ReturnType;
-                object FactoryFunc(IServiceProvider provider) => factoryMethod.Invoke(null, new object[] { provider });
-
-                var serviceDescriptor = new ServiceDescriptor(serviceType, FactoryFunc, factoryAttribute.LifeTime);
                 services.Add(serviceDescriptor);
-                Logger.LogDebug("Added service {Service} with factory {Factory} and lifetime {LifeTime}", serviceType, factoryType, factoryAttribute.LifeTime);
+
+                if (Logger.IsEnabled(LogLevel.Debug))
+                {
+                    Logger.LogDebug(
+                        "Added service {Service} with implementation {ServiceImpl} and lifetime {LifeTime}",
+                        serviceDescriptor.ServiceType,
+                        serviceDescriptor.ImplementationType ?? serviceDescriptor.ImplementationInstance ?? serviceDescriptor.ImplementationFactory,
+                        serviceDescriptor.Lifetime);
+                }
             }
-        }
-
-        public List<MethodInfo> GetFactoryMethods(Type factoryType)
-        {
-            var methods = factoryType.GetMethods(BindingFlags.Static | BindingFlags.Public).ToList();
-
-            methods = methods
-                .Where(method => method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(IServiceProvider))
-                .ToList();
-
-            if (methods.Count == 0)
-            {
-                Logger.LogWarning("Factory {Factory} has no factory methods defined", factoryType);
-            }
-
-            return methods;
         }
     }
 }
