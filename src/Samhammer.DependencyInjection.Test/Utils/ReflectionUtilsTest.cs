@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Samhammer.DependencyInjection.Utils;
 using Xunit;
@@ -34,37 +33,6 @@ namespace Samhammer.DependencyInjection.Test.Utils
             var result = ReflectionUtils.FindAllExportedTypesWithParentType(assemblies, parentType);
 
             result.Should().BeEquivalentTo(expectedTypes);
-        }
-
-        [Fact]
-        public void GetConstants()
-        {
-            var actual = ReflectionUtils.GetConstants<string>(typeof(TestConstantClass)).ToList();
-
-            var expected = new List<string>
-            {
-                TestConstantClass.PublicConstStringVarName,
-            };
-
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        [Fact]
-        public void GetPropertyPath()
-        {
-            var expected = new List<string>
-            {
-                "TestClassA.AProp1",
-                "TestClassA.TestClassB.BProp1",
-                "TestClassA.TestClassB.TestClassC.CProp1",
-            };
-
-            var testClass = new TestClassA();
-            var result = new List<string>();
-
-            ReflectionUtils.GetPropertyPath(testClass.GetType(), nameof(TestClassA), result);
-
-            expected.Should().BeEquivalentTo(result);
         }
     }
 
@@ -113,38 +81,6 @@ namespace Samhammer.DependencyInjection.Test.Utils
     [Class2]
     public class TestClass2
     {
-    }
-
-    public class TestClassA
-    {
-        public TestClassB TestClassB { get; set; }
-
-        public int AProp1 { get; set; }
-    }
-
-    public class TestClassB
-    {
-        public TestClassC TestClassC { get; set; }
-
-        public List<string> BProp1 { get; set; }
-    }
-
-    public class TestClassC
-    {
-        public string CProp1 { get; set; }
-    }
-
-    public class TestConstantClass
-    {
-        public const string PublicConstStringVarName = "PublicConstStringVarName";
-        public const int PublicConstIntVarName = 1;
-        public static string PublicStaticStringVarName = "PublicStaticStringVarName";
-        public string PublicStringVarName = "PublicStringVarName";
-
-        // ReSharper disable once UnusedMember.Local
-        private const string PrivateConstStringVarName = "PrivateConstStringVarName";
-        private static string privateStaticStringVarName = "PrivateStaticStringVarName";
-        private string privateStringVarName = "PrivateStringVarName";
     }
 #pragma warning restore CS0414, SA1401, SA1402, IDE0044
 }

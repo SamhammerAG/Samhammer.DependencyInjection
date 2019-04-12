@@ -27,50 +27,6 @@ namespace Samhammer.DependencyInjection.Utils
             return exportedTypes;
         }
 
-        public static IEnumerable<T> GetConstants<T>(Type type)
-        {
-            return type.GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(x => x.IsLiteral && !x.IsInitOnly && x.FieldType == typeof(T))
-                .Select(x => x.GetValue(null)).Cast<T>();
-        }
-
-        public static void GetPropertyPath(Type objType, string parentName, List<string> types)
-        {
-            if (IsChildType(objType))
-            {
-                parentName = $"{parentName}.{objType.Name}";
-                types.Add(parentName);
-                return;
-            }
-
-            var properties = objType.GetProperties().OrderBy(x => x.Name);
-
-            foreach (var propertyInfo in properties)
-            {
-                GetPropertyPath(propertyInfo, parentName, types);
-            }
-        }
-
-        private static void GetPropertyPath(PropertyInfo prop, string parentName, List<string> types)
-        {
-            if (IsChildType(prop.PropertyType))
-            {
-                parentName = $"{parentName}.{prop.Name}";
-                types.Add(parentName);
-                return;
-            }
-
-            GetPropertyPath(prop.PropertyType, $"{parentName}.{prop.Name}", types);
-        }
-
-        private static bool IsChildType(Type objType)
-        {
-            return objType.IsPrimitive
-                   || objType == typeof(string)
-                   || (objType.IsGenericType && objType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-                   || (objType.IsGenericType && objType.GetGenericTypeDefinition() == typeof(List<>));
-        }
-
         private static bool InheritsFrom(this Type type, Type baseType)
         {
             return baseType.IsInterface
