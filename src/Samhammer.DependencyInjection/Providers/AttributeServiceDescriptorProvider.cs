@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Abstractions;
-using Samhammer.DependencyInjection.Providers.Attribute;
+using Samhammer.DependencyInjection.Attributes;
+using Samhammer.DependencyInjection.Handlers;
 using Samhammer.DependencyInjection.Utils;
 
 namespace Samhammer.DependencyInjection.Providers

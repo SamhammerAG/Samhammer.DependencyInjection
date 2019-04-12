@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Samhammer.DependencyInjection.Providers.Attribute;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedList;

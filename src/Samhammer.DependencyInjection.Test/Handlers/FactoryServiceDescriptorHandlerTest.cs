@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Providers.Attribute;
+using Samhammer.DependencyInjection.Handlers;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
 using Xunit;
 
-namespace Samhammer.DependencyInjection.Test.Providers.Attribute
+namespace Samhammer.DependencyInjection.Test.Handlers
 {
     public class FactoryServiceDescriptorHandlerTest
     {

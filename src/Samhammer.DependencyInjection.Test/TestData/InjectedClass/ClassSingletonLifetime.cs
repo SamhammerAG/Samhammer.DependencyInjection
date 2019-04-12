@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Samhammer.DependencyInjection.Abstractions;
+using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Test.TestData.InjectedClass
 {

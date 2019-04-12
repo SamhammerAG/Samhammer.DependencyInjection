@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Samhammer.DependencyInjection.Handlers;
 using Samhammer.DependencyInjection.Providers;
-using Samhammer.DependencyInjection.Providers.Attribute;
 
 namespace Samhammer.DependencyInjection
 {

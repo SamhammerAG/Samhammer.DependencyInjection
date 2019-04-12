@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using Samhammer.DependencyInjection.Abstractions;
+using Samhammer.DependencyInjection.Attributes;
 
-namespace Samhammer.DependencyInjection.Providers.Attribute
+namespace Samhammer.DependencyInjection.Handlers
 {
     public abstract class AttributeServiceDescriptorHandler<T> : IAttributeServiceDescriptorHandler where T : DependencyInjectionAttribute
     {

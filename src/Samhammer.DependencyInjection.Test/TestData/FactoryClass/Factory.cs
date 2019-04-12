@@ -1,5 +1,5 @@
 ﻿using System;
-using Samhammer.DependencyInjection.Abstractions;
+using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Test.TestData.FactoryClass
 {

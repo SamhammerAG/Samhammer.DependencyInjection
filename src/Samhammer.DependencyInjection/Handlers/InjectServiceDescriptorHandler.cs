@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Abstractions;
+using Samhammer.DependencyInjection.Attributes;
 
-namespace Samhammer.DependencyInjection.Providers.Attribute
+namespace Samhammer.DependencyInjection.Handlers
 {
     public class InjectServiceDescriptorHandler : AttributeServiceDescriptorHandler<InjectAttribute>
     {
