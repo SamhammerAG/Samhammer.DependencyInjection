@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Samhammer.DependencyInjection.Attributes
 {
+    /// <summary>
+    /// Registers this class with specific service.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class InjectAsAttribute : DependencyInjectionAttribute
     {
