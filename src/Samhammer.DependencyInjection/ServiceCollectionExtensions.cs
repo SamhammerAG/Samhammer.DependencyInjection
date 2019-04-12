@@ -12,6 +12,7 @@ namespace Samhammer.DependencyInjection
             serviceCollection.AddSingleton<IServiceDescriptorProvider, AttributeServiceDescriptorProvider>();
             serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, FactoryServiceDescriptorHandler>();
             serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectServiceDescriptorHandler>();
+            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectAsServiceDescriptorHandler>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             var dependencyResolver = serviceProvider.GetRequiredService<DependencyResolver>();

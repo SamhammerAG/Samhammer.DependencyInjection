@@ -10,7 +10,7 @@
 services.ResolveDependencies();
 ```
 
-#### How to register a class
+#### How to register a class as service for all interfaces
 - add Inject attribute to the class
 - add at least one interface to the class (class will register on all interfaces)
 - set servicelifetime optionally (default: Scoped)
@@ -21,12 +21,35 @@ public class Class : IClass
 {
 }
 
-public interface IClass
+public interface IClass : IBaseClass
+{
+}
+
+public interface IBaseClass
 {
 }
 ```
 
-#### How to register a instace
+#### How to register a class as service with specific type
+- add InjectAs attribute to the class
+- add interface or class as paramter is required (class will register to this type)
+
+```csharp
+[InjectAs(typeof(IServiceToRegister))]
+public class ClassWithSpecificService: IServiceToRegister, IServiceNotRegister
+{
+}
+
+public interface IServiceToRegister
+{
+}
+
+public interface IServiceNotRegister
+{
+}
+```
+
+#### How to register a instance as service
 - add Factory attribute to the factory class
 - add at least one public static method with parameter IServiceProvider
 - the returned instance will be registered to the return type of method

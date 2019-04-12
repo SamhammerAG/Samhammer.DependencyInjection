@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NSubstitute;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
+using Samhammer.DependencyInjection.Test.TestData.InjectedAsClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedList;
 using Xunit;
@@ -124,6 +123,21 @@ namespace Samhammer.DependencyInjection.Test
 
             // assert
             service.Should().NotBeNull().And.BeOfType<ClassFromFactory>();
+        }
+
+        [Fact]
+        private void GetClass_WithSpecificService()
+        {
+            // act
+            serviceCollection.ResolveDependencies();
+            serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IServiceToRegister service = serviceProvider.GetService<IServiceToRegister>();
+            IServiceNotRegister serviceNotExpected = serviceProvider.GetService<IServiceNotRegister>();
+
+            // assert
+            service.Should().NotBeNull().And.BeOfType<ClassWithSpecificService>();
+            serviceNotExpected.Should().BeNull();
         }
     }
 }
