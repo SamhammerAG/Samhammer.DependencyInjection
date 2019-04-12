@@ -22,7 +22,8 @@ namespace Samhammer.DependencyInjection.Handlers
 
             if (serviceTypes.Count == 0)
             {
-                Logger.LogWarning("Implementation {ServiceImpl} has no interfaces defined", implementationType);
+                Logger.LogError("Class {ServiceImpl} has no interfaces defined", implementationType);
+                throw new ArgumentException(nameof(implementationType));
             }
 
             foreach (var serviceType in serviceTypes)

@@ -17,6 +17,12 @@ namespace Samhammer.DependencyInjection.Handlers
 
         public override IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, InjectAsAttribute injectAttribute)
         {
+            if (injectAttribute.ServiceType == null)
+            {
+                Logger.LogError("Class {ServiceImpl} has NULL value in serviceType of attribute {Attribute}.", implementationType.GetType(), injectAttribute.GetType());
+                throw new ArgumentNullException(nameof(injectAttribute.ServiceType));
+            }
+
             var serviceDescriptor = new ServiceDescriptor(injectAttribute.ServiceType, implementationType, injectAttribute.LifeTime);
             yield return serviceDescriptor;
         }

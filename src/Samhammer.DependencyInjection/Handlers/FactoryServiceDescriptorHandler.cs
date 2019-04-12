@@ -41,7 +41,8 @@ namespace Samhammer.DependencyInjection.Handlers
 
             if (methods.Count == 0)
             {
-                Logger.LogWarning("Factory {Factory} has no factory methods defined", factoryType);
+                Logger.LogError("Class {Factory} has no factory methods defined", factoryType);
+                throw new ArgumentException(nameof(factoryType));
             }
 
             return methods;
