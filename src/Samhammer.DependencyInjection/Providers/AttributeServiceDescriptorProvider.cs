@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Samhammer.DependencyInjection.Abstractions;
+using Samhammer.DependencyInjection.Providers.Attribute;
 using Samhammer.DependencyInjection.Utils;
 
 namespace Samhammer.DependencyInjection.Providers
@@ -13,9 +14,12 @@ namespace Samhammer.DependencyInjection.Providers
     {
         private ILogger<AttributeServiceDescriptorProvider> Logger { get; }
 
-        public AttributeServiceDescriptorProvider(ILogger<AttributeServiceDescriptorProvider> logger)
+        private List<IAttributeServiceDescriptorHandler> Handlers { get; }
+
+        public AttributeServiceDescriptorProvider(ILogger<AttributeServiceDescriptorProvider> logger, IEnumerable<IAttributeServiceDescriptorHandler> handlers)
         {
             Logger = logger;
+            Handlers = handlers.ToList();
         }
 
         public IEnumerable<ServiceDescriptor> ResolveServices()
@@ -23,24 +27,14 @@ namespace Samhammer.DependencyInjection.Providers
             var assemblies = AssemblyUtils.LoadAllAssembliesOfProject();
             Logger.LogTrace("Loaded assemblies: {Assemblies}.", assemblies.Select(a => a.GetName().Name));
 
-            var types = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(InjectAttribute));
-            Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}.", typeof(InjectAttribute), types);
+            var types = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(DependencyInjectionAttribute));
+            Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}.", typeof(DependencyInjectionAttribute), types);
 
             foreach (var type in types)
             {
-                var descriptors = ResolveService(type);
-                foreach (var descriptor in descriptors)
-                {
-                    yield return descriptor;
-                }
-            }
+                var attribute = type.GetTypeInfo().GetCustomAttribute<DependencyInjectionAttribute>(true);
+                var descriptors = ResolveService(type, attribute);
 
-            var factoryTypes = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(FactoryAttribute));
-            Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}.", typeof(FactoryAttribute), types);
-
-            foreach (var type in factoryTypes)
-            {
-                var descriptors = ResolveServiceFactory(type);
                 foreach (var descriptor in descriptors)
                 {
                     yield return descriptor;
@@ -48,52 +42,18 @@ namespace Samhammer.DependencyInjection.Providers
             }
         }
 
-        public IEnumerable<ServiceDescriptor> ResolveService(Type implementationType)
+        public IEnumerable<ServiceDescriptor> ResolveService(Type type, DependencyInjectionAttribute attribute)
         {
-            var injectAttribute = implementationType.GetTypeInfo().GetCustomAttribute<InjectAttribute>(true);
-            var serviceTypes = implementationType.GetInterfaces().ToList();
+            var handler = Handlers.Find(h => h.MatchAttribute(attribute));
 
-            if (serviceTypes.Count == 0)
+            if (handler == null)
             {
-                Logger.LogWarning("Implementation {ServiceImpl} has no interfaces defined", implementationType);
+                Logger.LogError("Handler for attribute {Attribute} not found.", attribute.GetType());
+                throw new ArgumentException("Handler for attribute not found");
             }
 
-            foreach (var serviceType in serviceTypes)
-            {
-                var serviceDescriptor = new ServiceDescriptor(serviceType, implementationType, injectAttribute.LifeTime);
-                yield return serviceDescriptor;
-            }
-        }
-
-        public IEnumerable<ServiceDescriptor> ResolveServiceFactory(Type factoryType)
-        {
-            var factoryAttribute = factoryType.GetTypeInfo().GetCustomAttribute<FactoryAttribute>(true);
-            var factoryMethods = GetFactoryMethods(factoryType);
-
-            foreach (var factoryMethod in factoryMethods)
-            {
-                var serviceType = factoryMethod.ReturnType;
-                object FactoryFunc(IServiceProvider provider) => factoryMethod.Invoke(null, new object[] { provider });
-
-                var serviceDescriptor = new ServiceDescriptor(serviceType, FactoryFunc, factoryAttribute.LifeTime);
-                yield return serviceDescriptor;
-            }
-        }
-
-        public List<MethodInfo> GetFactoryMethods(Type factoryType)
-        {
-            var methods = factoryType.GetMethods(BindingFlags.Static | BindingFlags.Public).ToList();
-
-            methods = methods
-                .Where(method => method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(IServiceProvider))
-                .ToList();
-
-            if (methods.Count == 0)
-            {
-                Logger.LogWarning("Factory {Factory} has no factory methods defined", factoryType);
-            }
-
-            return methods;
+            var descriptors = handler.ResolveServices(type, attribute);
+            return descriptors;
         }
     }
 }

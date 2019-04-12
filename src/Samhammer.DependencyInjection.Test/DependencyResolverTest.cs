@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Samhammer.DependencyInjection.Providers;
+using Samhammer.DependencyInjection.Providers.Attribute;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedList;
@@ -20,8 +20,7 @@ namespace Samhammer.DependencyInjection.Test
         public DependencyResolverTest()
         {
             serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton(Substitute.For<ILogger<DependencyResolver>>());
-            serviceCollection.AddSingleton(Substitute.For<ILogger<AttributeServiceDescriptorProvider>>());
+            serviceCollection.AddLogging(builder => builder.ClearProviders());
         }
 
         [Fact]
@@ -126,22 +125,6 @@ namespace Samhammer.DependencyInjection.Test
 
             // assert
             service.Should().NotBeNull().And.BeOfType<ClassFromFactory>();
-        }
-
-        // TODO move to own test class
-        [Fact]
-        private void GetFactoryMethods_FromFactory()
-        {
-            // arrange
-            var logger2 = Substitute.For<ILogger<AttributeServiceDescriptorProvider>>();
-            var resolver = new AttributeServiceDescriptorProvider(logger2);
-
-            // act
-            var methods = resolver.GetFactoryMethods(typeof(Factory));
-
-            // assert
-            methods.Should().HaveCount(1);
-            methods.First().Should().Match(x => x.Name.Equals(nameof(Factory.Build)));
         }
     }
 }
