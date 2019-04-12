@@ -7,7 +7,7 @@ using Samhammer.DependencyInjection.Abstractions;
 
 namespace Samhammer.DependencyInjection.Providers.Attribute
 {
-    public class InjectServiceDescriptorHandler : IAttributeServiceDescriptorHandler
+    public class InjectServiceDescriptorHandler : AttributeServiceDescriptorHandler<InjectAttribute>
     {
         private ILogger<InjectServiceDescriptorHandler> Logger { get; }
 
@@ -16,14 +16,8 @@ namespace Samhammer.DependencyInjection.Providers.Attribute
             Logger = logger;
         }
 
-        public bool MatchAttribute(DependencyInjectionAttribute attribute)
+        public override IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, InjectAttribute injectAttribute)
         {
-            return attribute.GetType() == typeof(InjectAttribute);
-        }
-
-        public IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, DependencyInjectionAttribute attribute)
-        {
-            var injectAttribute = (InjectAttribute) attribute;
             var serviceTypes = implementationType.GetInterfaces().ToList();
 
             if (serviceTypes.Count == 0)

@@ -7,8 +7,8 @@ namespace Samhammer.DependencyInjection.Providers.Attribute
 {
     public interface IAttributeServiceDescriptorHandler
     {
-        IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, DependencyInjectionAttribute attribute);
-
         bool MatchAttribute(DependencyInjectionAttribute attribute);
+
+        IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, DependencyInjectionAttribute attribute);
     }
 }

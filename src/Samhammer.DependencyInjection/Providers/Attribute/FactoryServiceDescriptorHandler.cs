@@ -8,7 +8,7 @@ using Samhammer.DependencyInjection.Abstractions;
 
 namespace Samhammer.DependencyInjection.Providers.Attribute
 {
-    public class FactoryServiceDescriptorHandler : IAttributeServiceDescriptorHandler
+    public class FactoryServiceDescriptorHandler : AttributeServiceDescriptorHandler<FactoryAttribute>
     {
         private ILogger<FactoryServiceDescriptorHandler> Logger { get; }
 
@@ -17,14 +17,8 @@ namespace Samhammer.DependencyInjection.Providers.Attribute
             Logger = logger;
         }
 
-        public bool MatchAttribute(DependencyInjectionAttribute attribute)
+        public override IEnumerable<ServiceDescriptor> ResolveServices(Type factoryType, FactoryAttribute factoryAttribute)
         {
-            return attribute.GetType() == typeof(FactoryAttribute);
-        }
-
-        public IEnumerable<ServiceDescriptor> ResolveServices(Type factoryType, DependencyInjectionAttribute attribute)
-        {
-            var factoryAttribute = (FactoryAttribute) attribute;
             var factoryMethods = GetFactoryMethods(factoryType);
 
             foreach (var factoryMethod in factoryMethods)
