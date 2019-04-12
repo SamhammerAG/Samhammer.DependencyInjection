@@ -9,7 +9,12 @@ namespace Samhammer.DependencyInjection.Handlers
     {
         public bool MatchAttribute(DependencyInjectionAttribute attribute)
         {
-            return attribute.GetType() == typeof(T);
+            return attribute.GetType() == typeof(T) && MatchAdditionalCriteria((T)attribute);
+        }
+
+        public virtual bool MatchAdditionalCriteria(T attribute)
+        {
+            return true;
         }
 
         public IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, DependencyInjectionAttribute attribute)

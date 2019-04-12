@@ -7,13 +7,18 @@ using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Handlers
 {
-    public class InjectServiceDescriptorHandler : AttributeServiceDescriptorHandler<InjectAttribute>
+    public class InjectAllServiceDescriptorHandler : AttributeServiceDescriptorHandler<InjectAttribute>
     {
-        private ILogger<InjectServiceDescriptorHandler> Logger { get; }
+        private ILogger<InjectAllServiceDescriptorHandler> Logger { get; }
 
-        public InjectServiceDescriptorHandler(ILogger<InjectServiceDescriptorHandler> logger)
+        public InjectAllServiceDescriptorHandler(ILogger<InjectAllServiceDescriptorHandler> logger)
         {
             Logger = logger;
+        }
+
+        public override bool MatchAdditionalCriteria(InjectAttribute attribute)
+        {
+            return attribute.Target == Target.All;
         }
 
         public override IEnumerable<ServiceDescriptor> ResolveServices(Type implementationType, InjectAttribute injectAttribute)
