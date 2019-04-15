@@ -2,7 +2,7 @@
 
 namespace Samhammer.DependencyInjection.Test.TestData.InjectedList
 {
-    [Inject]
+    [InjectAs(typeof(IService))]
     public class Service1 : IService
     {
     }

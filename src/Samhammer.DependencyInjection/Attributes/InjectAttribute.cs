@@ -9,7 +9,7 @@ namespace Samhammer.DependencyInjection.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class InjectAttribute : DependencyInjectionAttribute
     {
-        public InjectAttribute(ServiceLifetime lifetime = ServiceLifetime.Scoped, Target target = Target.All)
+        public InjectAttribute(Target target = Target.Matching, ServiceLifetime lifetime = ServiceLifetime.Scoped)
             : base(lifetime)
         {
             Target = target;

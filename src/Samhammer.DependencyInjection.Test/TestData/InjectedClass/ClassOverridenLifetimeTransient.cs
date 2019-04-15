@@ -3,7 +3,7 @@ using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Test.TestData.InjectedClass
 {
-    [Inject(ServiceLifetime.Transient)]
+    [Inject(lifetime: ServiceLifetime.Transient)]
     public class ClassOverridenLifetimeTransient : ClassSingletonLifetime, IClassOverridenLifetimeTransient
     {
     }
