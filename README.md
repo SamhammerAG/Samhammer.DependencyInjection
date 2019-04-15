@@ -38,7 +38,7 @@ public interface IBaseClass
 - ATTENTION with lifetime singleton / scoped. Each interface service returns his own instance of the class
 
 ```csharp
-[Inject(ServiceLifetime.Scoped)]
+[Inject(Target.All, ServiceLifetime.Scoped)]
 public class Class : IClass
 {
 }
