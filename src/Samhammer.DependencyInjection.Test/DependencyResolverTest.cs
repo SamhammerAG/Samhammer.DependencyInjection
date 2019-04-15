@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NSubstitute;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
+using Samhammer.DependencyInjection.Test.TestData.InjectedAsClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedList;
 using Xunit;
@@ -14,15 +13,12 @@ namespace Samhammer.DependencyInjection.Test
     {
         private readonly IServiceCollection serviceCollection;
 
-        private readonly ILogger<DependencyResolver> logger;
-
         private ServiceProvider serviceProvider;
 
         public DependencyResolverTest()
         {
-            logger = Substitute.For<ILogger<DependencyResolver>>();
             serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton(logger);
+            serviceCollection.AddLogging(builder => builder.ClearProviders());
         }
 
         [Fact]
@@ -100,6 +96,21 @@ namespace Samhammer.DependencyInjection.Test
         }
 
         [Fact]
+        private void GetClass_WithAllInterfaces()
+        {
+            // act
+            serviceCollection.ResolveDependencies();
+            serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IClassMultiple1 service1 = serviceProvider.GetService<IClassMultiple1>();
+            IClassMultiple2 service2 = serviceProvider.GetService<IClassMultiple2>();
+
+            // assert
+            service1.Should().NotBeNull().And.BeOfType<ClassWithMultipleInterfaces>();
+            service2.Should().NotBeNull().And.BeOfType<ClassWithMultipleInterfaces>();
+        }
+
+        [Fact]
         public void GetClass_WithInjectedList()
         {
             // act
@@ -130,17 +141,18 @@ namespace Samhammer.DependencyInjection.Test
         }
 
         [Fact]
-        private void GetFactoryMethods_FromFactory()
+        private void GetClass_WithSpecificService()
         {
-            // arrange
-            var resolver = new DependencyResolver(logger);
-
             // act
-            var methods = resolver.GetFactoryMethods(typeof(Factory));
+            serviceCollection.ResolveDependencies();
+            serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IServiceToRegister service = serviceProvider.GetService<IServiceToRegister>();
+            IServiceNotRegister serviceNotExpected = serviceProvider.GetService<IServiceNotRegister>();
 
             // assert
-            methods.Should().HaveCount(1);
-            methods.First().Should().Match(x => x.Name.Equals(nameof(Factory.Build)));
+            service.Should().NotBeNull().And.BeOfType<ClassWithSpecificService>();
+            serviceNotExpected.Should().BeNull();
         }
     }
 }

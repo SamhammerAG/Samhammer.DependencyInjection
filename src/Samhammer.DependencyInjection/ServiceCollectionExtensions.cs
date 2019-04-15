@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Samhammer.DependencyInjection.Handlers;
+using Samhammer.DependencyInjection.Providers;
 
 namespace Samhammer.DependencyInjection
 {
@@ -7,6 +9,11 @@ namespace Samhammer.DependencyInjection
         public static IServiceCollection ResolveDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<DependencyResolver>();
+            serviceCollection.AddSingleton<IServiceDescriptorProvider, AttributeServiceDescriptorProvider>();
+            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, FactoryServiceDescriptorHandler>();
+            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectMatchingServiceDescriptorHandler>();
+            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectAllServiceDescriptorHandler>();
+            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectAsServiceDescriptorHandler>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             var dependencyResolver = serviceProvider.GetRequiredService<DependencyResolver>();
