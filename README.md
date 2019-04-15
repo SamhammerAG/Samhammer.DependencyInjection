@@ -10,10 +10,32 @@
 services.ResolveDependencies();
 ```
 
-#### How to register a class as service for all interfaces
+#### How to register a class as service
 - add Inject attribute to the class
-- add at least one interface to the class (class will register on all interfaces)
+- set target optionally (default: Matching)
 - set servicelifetime optionally (default: Scoped)
+
+##### Target Matching
+- will register as service to interface with same name as class (IClassname)
+
+```csharp
+[Inject(Target.Matching, ServiceLifetime.Scoped)]
+public class Class : IClass
+{
+}
+
+public interface IClass : IBaseClass
+{
+}
+
+public interface IBaseClass
+{
+}
+```
+
+##### Target All
+- will register as service to all implemented interfaces of class
+- ATTENTION with lifetime singleton / scoped. Each interface service returns his own instance of the class
 
 ```csharp
 [Inject(ServiceLifetime.Scoped)]
