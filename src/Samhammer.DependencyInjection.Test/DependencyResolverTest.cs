@@ -96,6 +96,21 @@ namespace Samhammer.DependencyInjection.Test
         }
 
         [Fact]
+        private void GetClass_WithAllInterfaces()
+        {
+            // act
+            serviceCollection.ResolveDependencies();
+            serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IClassMultiple1 service1 = serviceProvider.GetService<IClassMultiple1>();
+            IClassMultiple2 service2 = serviceProvider.GetService<IClassMultiple2>();
+
+            // assert
+            service1.Should().NotBeNull().And.BeOfType<ClassWithMultipleInterfaces>();
+            service2.Should().NotBeNull().And.BeOfType<ClassWithMultipleInterfaces>();
+        }
+
+        [Fact]
         public void GetClass_WithInjectedList()
         {
             // act
