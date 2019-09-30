@@ -14,22 +14,23 @@ namespace Samhammer.DependencyInjection.Providers
     {
         private ILogger<AttributeServiceDescriptorProvider> Logger { get; }
 
+        private IAssemblyResolvingStrategy AssemblyResolvingStrategy { get; }
+
         private List<IAttributeServiceDescriptorHandler> Handlers { get; }
 
-        public AttributeServiceDescriptorProvider(ILogger<AttributeServiceDescriptorProvider> logger, IEnumerable<IAttributeServiceDescriptorHandler> handlers)
+        public AttributeServiceDescriptorProvider(
+            ILogger<AttributeServiceDescriptorProvider> logger,
+            IEnumerable<IAttributeServiceDescriptorHandler> handlers,
+            IAssemblyResolvingStrategy assemblyResolvingStrategy)
         {
             Logger = logger;
+            AssemblyResolvingStrategy = assemblyResolvingStrategy;
             Handlers = handlers.ToList();
         }
 
         public IEnumerable<ServiceDescriptor> ResolveServices()
         {
-            return ResolveServices(AssemblyUtils.LoadAllAssembliesOfProject);
-        }
-
-        public IEnumerable<ServiceDescriptor> ResolveServices(Func<IEnumerable<Assembly>> assemblyLoadingStrategy)
-        {
-            var assemblies = assemblyLoadingStrategy().ToList();
+            var assemblies = AssemblyResolvingStrategy.ResolveAssemblies().ToList();
             Logger.LogTrace("Loaded assemblies: {Assemblies}.", assemblies.Select(a => a.GetName().Name));
 
             var types = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(DependencyInjectionAttribute));
