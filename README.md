@@ -91,6 +91,7 @@ public class Factory
 
 #### How to publish package
 - set package version in Samhammer.DependencyInjection.csproj
+- add information to changelog
 - create git tag
 - dotnet pack -c Release
 - nuget push .\bin\Release\Samhammer.DependencyInjection.*.nupkg NUGET_API_KEY -src https://api.nuget.org/v3/index.json

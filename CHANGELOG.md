@@ -1,4 +1,10 @@
-﻿## 2.0.0
+﻿## 2.2.1
+- [FEATURE] added possibility to use  an custom assembly resolving strategy
+
+## 2.1.0
+- [CHANGE] downgraded dontet packages for compatibility with dotnet 2.1 projects
+
+## 2.0.0
 - [FEATURE] added interfaces to support additional implementations for servicedescriptor registration
 (IServiceDescriptorProvider, IAttributeServiceDescriptorHandler)
 - [FEATURE] added InjectAs attribute
