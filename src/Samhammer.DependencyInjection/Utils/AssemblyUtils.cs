@@ -7,43 +7,47 @@ namespace Samhammer.DependencyInjection.Utils
 {
     public class AssemblyUtils
     {
-        public static List<Assembly> LoadAllAssembliesOfProject()
+        public static IEnumerable<Assembly> LoadAllAssembliesOfProject()
         {
             var dependencyContext = DependencyContext.Default;
             return dependencyContext == null ? LoadAssembliesByEntryAssembly() : LoadAssembliesByDependencyContext(dependencyContext);
         }
 
-        private static List<Assembly> LoadAssembliesByEntryAssembly()
+        private static IEnumerable<Assembly> LoadAssembliesByEntryAssembly()
         {
             var assembly = Assembly.GetEntryAssembly();
             var dependencyNames = assembly.GetReferencedAssemblies();
-            var assemblies = new List<Assembly> { assembly };
 
+            yield return assembly;
+
+            Assembly loadedAssembly = null;
             foreach (var dependencyName in dependencyNames)
             {
                 try
                 {
                     // Try to load the referenced assembly...
-                    assemblies.Add(Assembly.Load(dependencyName));
+                    loadedAssembly = Assembly.Load(dependencyName);
                 }
                 catch
                 {
                     // Failed to load assembly. Skip it.
+                    loadedAssembly = null;
+                }
+
+                if (loadedAssembly != null)
+                {
+                    yield return loadedAssembly;
                 }
             }
-
-            return assemblies;
         }
 
-        private static List<Assembly> LoadAssembliesByDependencyContext(DependencyContext context)
+        private static IEnumerable<Assembly> LoadAssembliesByDependencyContext(DependencyContext context)
         {
             var assemblyNames = context.RuntimeLibraries
                 .Where(c => c.Type.Equals("project"))
                 .Select(d => d.Name);
 
-            return assemblyNames
-                .Select(a => Assembly.Load(new AssemblyName(a)))
-                .ToList();
+            return assemblyNames.Select(a => Assembly.Load(new AssemblyName(a)));
         }
     }
 }
