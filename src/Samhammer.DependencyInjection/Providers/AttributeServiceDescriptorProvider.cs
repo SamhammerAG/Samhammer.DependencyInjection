@@ -24,7 +24,12 @@ namespace Samhammer.DependencyInjection.Providers
 
         public IEnumerable<ServiceDescriptor> ResolveServices()
         {
-            var assemblies = AssemblyUtils.LoadAllAssembliesOfProject();
+            return ResolveServices(AssemblyUtils.LoadAllAssembliesOfProject);
+        }
+
+        public IEnumerable<ServiceDescriptor> ResolveServices(Func<IEnumerable<Assembly>> assemblyLoadingStrategy)
+        {
+            var assemblies = assemblyLoadingStrategy().ToList();
             Logger.LogTrace("Loaded assemblies: {Assemblies}.", assemblies.Select(a => a.GetName().Name));
 
             var types = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(DependencyInjectionAttribute));
