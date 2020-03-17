@@ -1,7 +1,6 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samhammer.DependencyInjection", "Samhammer.DependencyInjection\Samhammer.DependencyInjection.csproj", "{A2F11B3A-7C79-4765-8482-F430DEBE2D69}"
 EndProject

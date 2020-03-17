@@ -1,4 +1,7 @@
-﻿## 2.2.1
+﻿## 3.1
+- [UPDATE] updated aspnet packages for better compatibility with dotnet 3.1 projects
+
+## 2.2.1
 - [FEATURE] added possibility to use  an custom assembly resolving strategy
 
 ## 2.1.0
