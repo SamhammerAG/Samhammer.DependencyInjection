@@ -1,4 +1,6 @@
-﻿# Samhammer.DependencyInjection
+﻿[![Build Status](https://travis-ci.com/SamhammerAG/Samhammer.DependencyInjection.svg?branch=master)](https://travis-ci.com/SamhammerAG/Samhammer.DependencyInjection)
+
+# Samhammer.DependencyInjection
 
 ## Usage
 
