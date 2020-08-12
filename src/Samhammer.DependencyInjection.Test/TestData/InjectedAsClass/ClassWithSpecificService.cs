@@ -3,7 +3,7 @@
 namespace Samhammer.DependencyInjection.Test.TestData.InjectedAsClass
 {
     [InjectAs(typeof(IServiceToRegister))]
-    public class ClassWithSpecificService: IServiceToRegister, IServiceNotRegister
+    public class ClassWithSpecificService : IServiceToRegister, IServiceNotRegister
     {
     }
 
