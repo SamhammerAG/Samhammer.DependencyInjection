@@ -1,36 +1,42 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Samhammer.DependencyInjection.Handlers;
 using Samhammer.DependencyInjection.Providers;
-using Samhammer.DependencyInjection.Utils;
+using Samhammer.DependencyInjection.Strategy;
 
 namespace Samhammer.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection ResolveDependencies(this IServiceCollection serviceCollection, IAssemblyResolvingStrategy assemblyResolvingStrategy = null)
+        public static IServiceCollection ResolveDependencies(this IServiceCollection serviceCollection, Action<DependencyResolverOptions> customizeOptions = null)
         {
-            serviceCollection.AddSingleton<DependencyResolver>();
+            var options = BuildDefaultOptions();
+            customizeOptions?.Invoke(options);
 
-            if (assemblyResolvingStrategy == null)
-            {
-                serviceCollection.AddSingleton<IAssemblyResolvingStrategy, DefaultAssemblyResolvingStrategy>();
-            }
-            else
-            {
-                serviceCollection.AddSingleton(assemblyResolvingStrategy);
-            }
+            var logger = options.BuildLogger<DependencyResolver>();
+            var resolver = new DependencyResolver(logger, options.Providers);
 
-            serviceCollection.AddSingleton<IServiceDescriptorProvider, AttributeServiceDescriptorProvider>();
-            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, FactoryServiceDescriptorHandler>();
-            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectMatchingServiceDescriptorHandler>();
-            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectAllServiceDescriptorHandler>();
-            serviceCollection.AddSingleton<IAttributeServiceDescriptorHandler, InjectAsServiceDescriptorHandler>();
+            resolver.ResolveDependencies(serviceCollection);
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            var dependencyResolver = serviceProvider.GetRequiredService<DependencyResolver>();
-
-            dependencyResolver.ResolveDependencies(serviceCollection);
             return serviceCollection;
+        }
+
+        private static DependencyResolverOptions BuildDefaultOptions()
+        {
+            var options = new DependencyResolverOptions
+            {
+                LoggerFactory = new NullLoggerFactory(),
+                AssemblyResolvingStrategy = new DefaultAssemblyResolvingStrategy(),
+            };
+
+            options.AddAttributeHandler<FactoryServiceDescriptorHandler>(logger => new FactoryServiceDescriptorHandler(logger));
+            options.AddAttributeHandler<InjectAllServiceDescriptorHandler>(logger => new InjectAllServiceDescriptorHandler(logger));
+            options.AddAttributeHandler<InjectAsServiceDescriptorHandler>(logger => new InjectAsServiceDescriptorHandler(logger));
+            options.AddAttributeHandler<InjectMatchingServiceDescriptorHandler>(logger => new InjectMatchingServiceDescriptorHandler(logger));
+            options.AddProvider<AttributeServiceDescriptorProvider>((logger, strategy) => new AttributeServiceDescriptorProvider(logger, options.Handlers, strategy));
+            
+            return options;
         }
     }
 }

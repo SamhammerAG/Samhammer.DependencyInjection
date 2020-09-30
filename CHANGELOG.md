@@ -1,4 +1,7 @@
-﻿## 3.1
+﻿## 3.1.5
+- [CHANGE] change registration of custom options, cause the resolver now runs without ioc
+
+## 3.1
 - [UPDATE] updated aspnet packages for better compatibility with dotnet 3.1 projects
 
 ## 2.2.1
