@@ -55,7 +55,7 @@ namespace Samhammer.DependencyInjection.Providers
             if (handler == null)
             {
                 Logger.LogError("Handler for attribute {Attribute} not found.", attribute.GetType());
-                throw new ArgumentException("Handler for attribute not found");
+                throw new ArgumentException($"Handler for attribute {attribute.GetType()} not found");
             }
 
             var descriptors = handler.ResolveServices(type, attribute);
