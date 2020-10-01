@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Attributes;
+using Samhammer.DependencyInjection.Abstractions.Attributes;
 
 namespace Samhammer.DependencyInjection.Handlers
 {
@@ -29,7 +29,7 @@ namespace Samhammer.DependencyInjection.Handlers
             if (serviceType == null)
             {
                 Logger.LogError("Class {ServiceImpl} has no matching interface {InterfaceName} defined", implementationType, matchingInterfaceName);
-                throw new ArgumentException(nameof(implementationType));
+                throw new ArgumentException($"Class {implementationType} has no matching interface {matchingInterfaceName} defined", nameof(implementationType));
             }
 
             var serviceDescriptor = new ServiceDescriptor(serviceType, implementationType, injectAttribute.LifeTime);

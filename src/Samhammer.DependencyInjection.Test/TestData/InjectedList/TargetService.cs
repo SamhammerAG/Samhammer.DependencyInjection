@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Samhammer.DependencyInjection.Attributes;
+using Samhammer.DependencyInjection.Abstractions.Attributes;
 
 namespace Samhammer.DependencyInjection.Test.TestData.InjectedList
 {

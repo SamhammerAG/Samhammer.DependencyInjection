@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Attributes;
+using Samhammer.DependencyInjection.Abstractions.Attributes;
 
 namespace Samhammer.DependencyInjection.Handlers
 {
@@ -42,7 +42,7 @@ namespace Samhammer.DependencyInjection.Handlers
             if (methods.Count == 0)
             {
                 Logger.LogError("Class {Factory} has no factory methods defined", factoryType);
-                throw new ArgumentException(nameof(factoryType));
+                throw new ArgumentException($"Class {factoryType} has no factory methods defined", nameof(factoryType));
             }
 
             return methods;

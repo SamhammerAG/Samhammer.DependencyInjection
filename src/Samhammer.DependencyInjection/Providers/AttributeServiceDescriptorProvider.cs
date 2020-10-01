@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Attributes;
+using Samhammer.DependencyInjection.Abstractions.Attributes;
 using Samhammer.DependencyInjection.Handlers;
 using Samhammer.DependencyInjection.Utils;
 
@@ -55,7 +55,7 @@ namespace Samhammer.DependencyInjection.Providers
             if (handler == null)
             {
                 Logger.LogError("Handler for attribute {Attribute} not found.", attribute.GetType());
-                throw new ArgumentException("Handler for attribute not found");
+                throw new ArgumentException($"Handler for attribute {attribute.GetType()} not found");
             }
 
             var descriptors = handler.ResolveServices(type, attribute);

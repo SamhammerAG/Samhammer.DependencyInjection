@@ -4,7 +4,7 @@
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
     <Authors>Samhammer AG</Authors>
     <Company>Samhammer AG</Company>
-    <PackageProjectUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection.Abstractions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>3.1.5</Version>
@@ -13,15 +13,10 @@
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.7" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Samhammer.DependencyInjection.Abstractions\Samhammer.DependencyInjection.Abstractions.csproj" />
   </ItemGroup>
 </Project>

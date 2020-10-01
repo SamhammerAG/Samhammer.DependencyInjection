@@ -89,6 +89,44 @@ public class Factory
 }
 ```
 
+## Configuration
+Starting with version 3.1.5 all customizations needs to be done with the options action.
+
+The registrations to servicecollection will no longer be used cause we dont want to use ioc to setup ioc.
+@see also https://docs.microsoft.com/de-de/dotnet/core/compatibility/2.2-3.1#hosting-generic-host-restricts-startup-constructor-injection
+
+#### How to enable logging?
+By default the project will not do any logging, but you can activate it.
+This will require that you provide an ILoggerFactory from Microsoft.Extensions.Logging.
+
+###### Sample with microsoft console logger.
+```csharp
+var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
+services.ResolveDependencies(options => options.SetLogging(loggerFactory));
+```
+
+###### Sample with serilog logger. (you need to setup serilog before)
+```csharp
+var loggerFactory = new LoggerFactory().AddSerilog();
+services.ResolveDependencies(options => options.SetLogging(loggerFactory));
+```
+
+#### How to change assemly resolving strategy?
+By default the project will only resolve types of project assemblies, but not on packages or binaries.
+But you can replace the default strategy with your own implementation.
+
+```csharp
+services.ResolveDependencies(options => options.SetStrategy(new MyAssemblyResolvingStrategy()));
+```
+
+#### How to add additional service provider
+By default the project will only resolve types with Inject attributes.
+But you can add additonal resolving provider with your own implementation.
+
+```csharp
+services.ResolveDependencies(options => options.AddProvider<MyServiceDescriptorProvider>((logger, strategy) => new MyServiceDescriptorProvider(logger, strategy)));
+```
+
 ## Contribute
 
 #### How to publish package

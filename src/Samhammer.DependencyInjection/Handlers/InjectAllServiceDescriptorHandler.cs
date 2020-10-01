@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Attributes;
+using Samhammer.DependencyInjection.Abstractions.Attributes;
 
 namespace Samhammer.DependencyInjection.Handlers
 {
@@ -28,7 +28,7 @@ namespace Samhammer.DependencyInjection.Handlers
             if (serviceTypes.Count == 0)
             {
                 Logger.LogError("Class {ServiceImpl} has no interfaces defined", implementationType);
-                throw new ArgumentException(nameof(implementationType));
+                throw new ArgumentException($"Class {implementationType} has no interfaces defined", nameof(implementationType));
             }
 
             foreach (var serviceType in serviceTypes)
