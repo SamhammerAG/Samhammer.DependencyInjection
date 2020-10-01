@@ -1,4 +1,4 @@
-﻿using Samhammer.DependencyInjection.Abstractions.Attributes;
+﻿using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Test.TestData.InjectedList
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Samhammer.DependencyInjection.Abstractions.Attributes
+namespace Samhammer.DependencyInjection.Attributes
 {
     /// <summary>
     /// Registers instances of factory method(s) as service to the method return type.

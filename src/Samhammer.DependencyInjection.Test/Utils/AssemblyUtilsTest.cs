@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
-using Samhammer.DependencyInjection.Abstractions.Attributes;
+using Samhammer.DependencyInjection.Attributes;
 using Samhammer.DependencyInjection.Utils;
 using Xunit;
 

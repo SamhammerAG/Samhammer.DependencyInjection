@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Samhammer.DependencyInjection.Abstractions.Attributes;
+using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Handlers
 {
