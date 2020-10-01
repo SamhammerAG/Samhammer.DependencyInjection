@@ -91,6 +91,7 @@ public class Factory
 
 ## Configuration
 Starting with version 3.1.5 all customizations needs to be done with the options action.
+
 The registrations to servicecollection will no longer be used cause we dont want to use ioc to setup ioc.
 @see also https://docs.microsoft.com/de-de/dotnet/core/compatibility/2.2-3.1#hosting-generic-host-restricts-startup-constructor-injection
 
