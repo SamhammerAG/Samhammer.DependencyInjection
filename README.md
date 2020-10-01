@@ -107,8 +107,7 @@ services.ResolveDependencies(options => options.SetLogging(loggerFactory));
 
 ###### Sample with serilog logger. (you need to setup serilog before)
 ```csharp
-var loggerFactory = new LoggerFactory().AddSerilog();
-services.ResolveDependencies(options => options.SetLogging(loggerFactory));
+services.ResolveDependencies(options => options.SetLogging(new SerilogLoggerFactory()));
 ```
 
 #### How to change assemly resolving strategy?
