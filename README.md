@@ -124,7 +124,7 @@ By default the project will only resolve types with Inject attributes.
 But you can add additonal resolving provider with your own implementation.
 
 ```csharp
-options.AddProvider<MyServiceDescriptorProvider>((logger, strategy) => new MyServiceDescriptorProvider(logger, strategy));
+services.ResolveDependencies(options => options.AddProvider<MyServiceDescriptorProvider>((logger, strategy) => new MyServiceDescriptorProvider(logger, strategy)));
 ```
 
 ## Contribute
