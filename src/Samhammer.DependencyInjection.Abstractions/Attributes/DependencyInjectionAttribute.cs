@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Samhammer.DependencyInjection.Attributes
+namespace Samhammer.DependencyInjection.Abstractions.Attributes
 {
     public abstract class DependencyInjectionAttribute : Attribute
     {

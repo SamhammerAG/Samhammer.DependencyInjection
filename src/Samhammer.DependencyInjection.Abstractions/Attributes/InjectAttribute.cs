@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Samhammer.DependencyInjection.Attributes
+namespace Samhammer.DependencyInjection.Abstractions.Attributes
 {
     /// <summary>
     /// Registers this class with interface(s) as service.
