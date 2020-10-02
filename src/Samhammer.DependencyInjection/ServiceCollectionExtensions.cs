@@ -9,6 +9,13 @@ namespace Samhammer.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
+        [Obsolete]
+        public static IServiceCollection ResolveDependencies(this IServiceCollection serviceCollection, IAssemblyResolvingStrategy assemblyResolvingStrategy)
+        {
+            serviceCollection.ResolveDependencies(options => options.SetStrategy(assemblyResolvingStrategy));
+            return serviceCollection;
+        }
+
         public static IServiceCollection ResolveDependencies(this IServiceCollection serviceCollection, Action<DependencyResolverOptions> customizeOptions = null)
         {
             var options = BuildDefaultOptions();
