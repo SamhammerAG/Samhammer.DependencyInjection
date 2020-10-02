@@ -7,7 +7,7 @@
     <PackageProjectUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>3.1.5.1</Version>
+    <Version>3.1.5.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" />
