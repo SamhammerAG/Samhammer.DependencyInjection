@@ -92,7 +92,7 @@ public class Factory
 ## Configuration
 Starting with version 3.1.5 all customizations needs to be done with the options action.
 
-The registrations to servicecollection will no longer be used cause we dont want to use ioc to setup ioc.
+The registrations to servicecollection will no longer be used because we dont want to use ioc to setup ioc.
 @see also https://docs.microsoft.com/de-de/dotnet/core/compatibility/2.2-3.1#hosting-generic-host-restricts-startup-constructor-injection
 
 #### How to enable logging?
@@ -110,7 +110,7 @@ services.ResolveDependencies(options => options.SetLogging(loggerFactory));
 services.ResolveDependencies(options => options.SetLogging(new SerilogLoggerFactory()));
 ```
 
-#### How to change assemly resolving strategy?
+#### How to change assembly resolving strategy?
 By default the project will only resolve types of project assemblies, but not on packages or binaries.
 But you can replace the default strategy with your own implementation.
 
