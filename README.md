@@ -129,9 +129,4 @@ services.ResolveDependencies(options => options.AddProvider<MyServiceDescriptorP
 ## Contribute
 
 #### How to publish package
-- set package version in Samhammer.DependencyInjection.csproj
-- add information to changelog
-- create git tag
-- dotnet pack -c Release
-- nuget push .\bin\Release\Samhammer.DependencyInjection.*.nupkg NUGET_API_KEY -src https://api.nuget.org/v3/index.json
-- (optional) nuget setapikey NUGET_API_KEY -source https://api.nuget.org/v3/index.json
+- Create a tag and let the github action do the publishing for you
