@@ -113,7 +113,15 @@ By default the project will only resolve types of project assemblies, but not on
 But you can replace the default strategy with your own implementation.
 
 ```csharp
-services.ResolveDependencies(options => options.SetStrategy(new MyAssemblyResolvingStrategy()));
+services.ResolveDependencies(options => options.SetAssemblyStrategy(new MyAssemblyResolvingStrategy()));
+```
+
+#### How to change type resolving strategy?
+It is possible to change the way types are found by the DependencyInjectionAttribute. Also one
+could change the naming schema of interfaces by using a custom type resolving strategy.
+
+```csharp
+services.ResolveDependencies(options => options.SetTypeStrategy(new MyTypeResolvingStrategy()));
 ```
 
 #### How to add additional service provider
@@ -121,7 +129,44 @@ By default the project will only resolve types with Inject attributes.
 But you can add additonal resolving provider with your own implementation.
 
 ```csharp
-services.ResolveDependencies(options => options.AddProvider<MyServiceDescriptorProvider>((logger, strategy) => new MyServiceDescriptorProvider(logger, strategy)));
+services.ResolveDependencies(options => options.AddProvider<MyServiceDescriptorProvider>((logger, o) => new MyServiceDescriptorProvider(logger, o)));
+```
+
+## Using overrides
+You can use overrides to have a different behavior depending on the configuration used on resolving dependencies.
+
+Just add the override attribute to a new class that inherits a class with one of the dependency injection attributes.
+As soon as the configuration matches "MyConfigName" your original implementation will be overwritten by the implementation of this class.
+
+Classes with non matching configuration names are not registered.
+
+```csharp
+[Override("MyConfigName")]
+public class InjectOverrideClass : InjectParentClass
+{
+}
+
+[Override("OtherConfigName")]
+public class InjectOverrideClass : InjectParentClass
+{
+}
+
+[Inject]
+public class InjectParentClass : IInjectParentClass
+{
+}
+
+public interface IInjectParentClass
+{
+}
+```
+
+### How to use
+
+Add this nuget package to your project: https://www.nuget.org/packages/Samhammer.DependencyInjection.Override/
+
+```csharp
+serviceCollection.ResolveDependencies(o => { o.UseOverride("MyConfigName"); });
 ```
 
 ## Contribute
