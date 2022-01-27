@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
@@ -7,8 +7,6 @@
     <PackageProjectUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SamhammerAG/Samhammer.DependencyInjection</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Description>Resolving Services for .NET Core projects</Description>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" />
