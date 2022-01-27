@@ -142,12 +142,12 @@ Classes with non matching configuration names are not registered.
 
 ```csharp
 [Override("MyConfigName")]
-public class InjectOverrideClass : InjectParentClass
+public class MyConfigNameOverride : InjectParentClass
 {
 }
 
 [Override("OtherConfigName")]
-public class InjectOverrideClass : InjectParentClass
+public class OtherConfigNameOverride : InjectParentClass
 {
 }
 
