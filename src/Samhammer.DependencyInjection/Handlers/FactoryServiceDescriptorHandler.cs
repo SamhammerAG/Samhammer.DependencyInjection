@@ -3,20 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Samhammer.DependencyInjection.Attributes;
 
 namespace Samhammer.DependencyInjection.Handlers
 {
     public class FactoryServiceDescriptorHandler : AttributeServiceDescriptorHandler<FactoryAttribute>
     {
-        private ILogger<FactoryServiceDescriptorHandler> Logger { get; }
-
-        public FactoryServiceDescriptorHandler(ILogger<FactoryServiceDescriptorHandler> logger)
-        {
-            Logger = logger;
-        }
-
         public override IEnumerable<ServiceDescriptor> ResolveServices(Type factoryType, FactoryAttribute factoryAttribute)
         {
             var factoryMethods = GetFactoryMethods(factoryType);
@@ -41,7 +33,6 @@ namespace Samhammer.DependencyInjection.Handlers
 
             if (methods.Count == 0)
             {
-                Logger.LogError("Class {Factory} has no factory methods defined", factoryType);
                 throw new ArgumentException($"Class {factoryType} has no factory methods defined", nameof(factoryType));
             }
 

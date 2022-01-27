@@ -13,8 +13,7 @@ namespace Samhammer.DependencyInjection.Test.Handlers
 
         public FactoryServiceDescriptorHandlerTest()
         {
-            var logger = NSubstitute.Substitute.For<ILogger<FactoryServiceDescriptorHandler>>();
-            handler = new FactoryServiceDescriptorHandler(logger);
+            handler = new FactoryServiceDescriptorHandler();
         }
 
         [Fact]

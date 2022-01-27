@@ -5,8 +5,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Samhammer.DependencyInjection.Attributes;
-using Samhammer.DependencyInjection.Handlers;
-using Samhammer.DependencyInjection.Utils;
 
 namespace Samhammer.DependencyInjection.Providers
 {
@@ -14,27 +12,23 @@ namespace Samhammer.DependencyInjection.Providers
     {
         private ILogger<AttributeServiceDescriptorProvider> Logger { get; }
 
-        private IAssemblyResolvingStrategy AssemblyResolvingStrategy { get; }
-
-        private List<IAttributeServiceDescriptorHandler> Handlers { get; }
-
+        private DependencyResolverOptions Options { get; }
+        
         public AttributeServiceDescriptorProvider(
             ILogger<AttributeServiceDescriptorProvider> logger,
-            IEnumerable<IAttributeServiceDescriptorHandler> handlers,
-            IAssemblyResolvingStrategy assemblyResolvingStrategy)
+            DependencyResolverOptions options)
         {
             Logger = logger;
-            AssemblyResolvingStrategy = assemblyResolvingStrategy;
-            Handlers = handlers.ToList();
+            Options = options;
         }
 
         public IEnumerable<ServiceDescriptor> ResolveServices()
         {
-            var assemblies = AssemblyResolvingStrategy.ResolveAssemblies().ToList();
-            Logger.LogTrace("Loaded assemblies: {Assemblies}.", assemblies.Select(a => a.GetName().Name));
+            var assemblies = Options.AssemblyResolvingStrategy.ResolveAssemblies().ToList();
+            Logger.LogTrace("Loaded assemblies: {Assemblies}", assemblies.Select(a => a.GetName().Name));
 
-            var types = ReflectionUtils.FindAllExportedTypesWithAttribute(assemblies, typeof(DependencyInjectionAttribute));
-            Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}.", typeof(DependencyInjectionAttribute), types);
+            var types = Options.TypeResolvingStrategy.ResolveTypesByAttribute(assemblies, typeof(DependencyInjectionAttribute));
+            Logger.LogTrace("Loaded types with attribute {Attribute}: {Types}", typeof(DependencyInjectionAttribute), types);
 
             foreach (var type in types)
             {
@@ -50,16 +44,24 @@ namespace Samhammer.DependencyInjection.Providers
 
         public IEnumerable<ServiceDescriptor> ResolveService(Type type, DependencyInjectionAttribute attribute)
         {
-            var handler = Handlers.Find(h => h.MatchAttribute(attribute));
+            var handler = Options.Handlers.ToList().Find(h => h.MatchAttribute(attribute));
 
             if (handler == null)
             {
-                Logger.LogError("Handler for attribute {Attribute} not found.", attribute.GetType());
+                Logger.LogError("Handler for attribute {Attribute} not found", attribute.GetType());
                 throw new ArgumentException($"Handler for attribute {attribute.GetType()} not found");
             }
 
-            var descriptors = handler.ResolveServices(type, attribute);
-            return descriptors;
+            try
+            {
+                var descriptors = handler.ResolveServices(type, attribute);
+                return descriptors;
+            }
+            catch (ArgumentException e)
+            {
+                Logger.LogError("{Message}", e.Message);
+                throw;
+            }
         }
     }
 }
