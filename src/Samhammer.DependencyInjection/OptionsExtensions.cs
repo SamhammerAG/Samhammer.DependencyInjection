@@ -7,11 +7,10 @@ namespace Samhammer.DependencyInjection
 {
     public static class OptionsExtensions
     {
-        public static DependencyResolverOptions AddProvider<T>(this DependencyResolverOptions options, Func<ILogger<T>, IAssemblyResolvingStrategy, T> createProvider) where T : IServiceDescriptorProvider
+        public static DependencyResolverOptions AddProvider<T>(this DependencyResolverOptions options, Func<ILogger<T>, DependencyResolverOptions, T> createProvider) where T : IServiceDescriptorProvider
         {
             var logger = options.BuildLogger<T>();
-            var strategy = options.AssemblyResolvingStrategy;
-            var provider = createProvider(logger, strategy);
+            var provider = createProvider(logger, options);
 
             options.Providers.Add(provider);
             return options;
@@ -26,9 +25,15 @@ namespace Samhammer.DependencyInjection
             return options;
         }
 
-        public static DependencyResolverOptions SetStrategy(this DependencyResolverOptions options, IAssemblyResolvingStrategy strategy)
+        public static DependencyResolverOptions SetAssemblyStrategy(this DependencyResolverOptions options, IAssemblyResolvingStrategy strategy)
         {
             options.AssemblyResolvingStrategy = strategy;
+            return options;
+        }
+        
+        public static DependencyResolverOptions SetTypeStrategy(this DependencyResolverOptions options, ITypeResolvingStrategy strategy)
+        {
+            options.TypeResolvingStrategy = strategy;
             return options;
         }
 

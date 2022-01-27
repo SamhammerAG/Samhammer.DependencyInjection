@@ -12,7 +12,7 @@ namespace Samhammer.DependencyInjection
         [Obsolete]
         public static IServiceCollection ResolveDependencies(this IServiceCollection serviceCollection, IAssemblyResolvingStrategy assemblyResolvingStrategy)
         {
-            serviceCollection.ResolveDependencies(options => options.SetStrategy(assemblyResolvingStrategy));
+            serviceCollection.ResolveDependencies(options => options.SetAssemblyStrategy(assemblyResolvingStrategy));
             return serviceCollection;
         }
 
@@ -35,13 +35,14 @@ namespace Samhammer.DependencyInjection
             {
                 LoggerFactory = new NullLoggerFactory(),
                 AssemblyResolvingStrategy = new DefaultAssemblyResolvingStrategy(),
+                TypeResolvingStrategy = new DefaultTypeResolvingStrategy(),
             };
 
-            options.AddAttributeHandler<FactoryServiceDescriptorHandler>(logger => new FactoryServiceDescriptorHandler(logger));
-            options.AddAttributeHandler<InjectAllServiceDescriptorHandler>(logger => new InjectAllServiceDescriptorHandler(logger));
-            options.AddAttributeHandler<InjectAsServiceDescriptorHandler>(logger => new InjectAsServiceDescriptorHandler(logger));
-            options.AddAttributeHandler<InjectMatchingServiceDescriptorHandler>(logger => new InjectMatchingServiceDescriptorHandler(logger));
-            options.AddProvider<AttributeServiceDescriptorProvider>((logger, strategy) => new AttributeServiceDescriptorProvider(logger, options.Handlers, strategy));
+            options.AddAttributeHandler<FactoryServiceDescriptorHandler>(logger => new FactoryServiceDescriptorHandler());
+            options.AddAttributeHandler<InjectAllServiceDescriptorHandler>(logger => new InjectAllServiceDescriptorHandler());
+            options.AddAttributeHandler<InjectAsServiceDescriptorHandler>(logger => new InjectAsServiceDescriptorHandler());
+            options.AddAttributeHandler<InjectMatchingServiceDescriptorHandler>(logger => new InjectMatchingServiceDescriptorHandler(options));
+            options.AddProvider<AttributeServiceDescriptorProvider>((logger, o) => new AttributeServiceDescriptorProvider(logger, o));
             
             return options;
         }

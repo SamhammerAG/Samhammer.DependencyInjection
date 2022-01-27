@@ -10,6 +10,8 @@ namespace Samhammer.DependencyInjection
         public ILoggerFactory LoggerFactory { get; set; }
 
         public IAssemblyResolvingStrategy AssemblyResolvingStrategy { get; set; }
+        
+        public ITypeResolvingStrategy TypeResolvingStrategy { get; set; }
 
         public List<IServiceDescriptorProvider> Providers { get; } = new List<IServiceDescriptorProvider>();
 
