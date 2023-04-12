@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Samhammer.DependencyInjection.Test.TestData.DecorateClass;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedAsClass;
 using Samhammer.DependencyInjection.Test.TestData.InjectedClass;
@@ -153,6 +155,27 @@ namespace Samhammer.DependencyInjection.Test
             // assert
             service.Should().NotBeNull().And.BeOfType<ClassWithSpecificService>();
             serviceNotExpected.Should().BeNull();
+        }
+
+        [Fact]
+        private void Decorate()
+        {
+            // act
+            serviceCollection.ResolveDependencies();
+            serviceCollection.Decorate<IClassDefaultLifetime, ClassDefaultLifetimeDecorate>();
+            serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IClassDefaultLifetime service = serviceProvider.GetService<IClassDefaultLifetime>();
+
+            // assert
+            service.Should().NotBeNull().And.BeOfType<ClassDefaultLifetimeDecorate>();
+        }
+
+        [Fact]
+        private void Decorate_NotRegisteredService()
+        {
+            serviceCollection.ResolveDependencies();
+            Assert.Throws<InvalidOperationException>(() => serviceCollection.Decorate<IServiceNotRegister, ClassWithSpecificService>());
         }
     }
 }
