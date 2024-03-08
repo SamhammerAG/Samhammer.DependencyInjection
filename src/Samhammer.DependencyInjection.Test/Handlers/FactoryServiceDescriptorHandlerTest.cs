@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Samhammer.DependencyInjection.Handlers;
 using Samhammer.DependencyInjection.Test.TestData.FactoryClass;
 using Xunit;
