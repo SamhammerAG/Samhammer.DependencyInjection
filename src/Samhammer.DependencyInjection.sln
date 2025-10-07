@@ -12,9 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samhammer.DependencyInjection.Override", "Samhammer.DependencyInjection.Override\Samhammer.DependencyInjection.Override.csproj", "{3229D5A2-838F-433A-BC7D-32D76A08CCD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samhammer.DependencyInjection.Override", "Samhammer.DependencyInjection.Override\Samhammer.DependencyInjection.Override.csproj", "{3229D5A2-838F-433A-BC7D-32D76A08CCD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samhammer.DependencyInjection.Override.Test", "Samhammer.DependencyInjection.Override.Test\Samhammer.DependencyInjection.Override.Test.csproj", "{E5197D26-077D-46AD-92BE-32C3DB192C44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samhammer.DependencyInjection.Override.Test", "Samhammer.DependencyInjection.Override.Test\Samhammer.DependencyInjection.Override.Test.csproj", "{E5197D26-077D-46AD-92BE-32C3DB192C44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTest", "ApiTest\ApiTest.csproj", "{6A652F59-57F5-4CA3-B552-4A57EC9A42F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{E5197D26-077D-46AD-92BE-32C3DB192C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5197D26-077D-46AD-92BE-32C3DB192C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5197D26-077D-46AD-92BE-32C3DB192C44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A652F59-57F5-4CA3-B552-4A57EC9A42F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A652F59-57F5-4CA3-B552-4A57EC9A42F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A652F59-57F5-4CA3-B552-4A57EC9A42F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A652F59-57F5-4CA3-B552-4A57EC9A42F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
