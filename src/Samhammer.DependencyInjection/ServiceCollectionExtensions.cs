@@ -44,6 +44,8 @@ namespace Samhammer.DependencyInjection
             options.AddAttributeHandler<InjectAllServiceDescriptorHandler>(logger => new InjectAllServiceDescriptorHandler());
             options.AddAttributeHandler<InjectAsServiceDescriptorHandler>(logger => new InjectAsServiceDescriptorHandler());
             options.AddAttributeHandler<InjectMatchingServiceDescriptorHandler>(logger => new InjectMatchingServiceDescriptorHandler(options));
+            options.AddAttributeHandler<InjectAbMatchingServiceDescriptorHandler>(logger => new InjectAbMatchingServiceDescriptorHandler(options));
+            options.AddAttributeHandler<InjectAbValidateConfigsMatchingServiceDescriptorHandler>(logger => new InjectAbValidateConfigsMatchingServiceDescriptorHandler(options));
             options.AddProvider<AttributeServiceDescriptorProvider>((logger, o) => new AttributeServiceDescriptorProvider(logger, o));
 
             return options;

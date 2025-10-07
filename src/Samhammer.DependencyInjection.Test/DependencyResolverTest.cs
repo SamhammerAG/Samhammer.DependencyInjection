@@ -24,6 +24,24 @@ namespace Samhammer.DependencyInjection.Test
         }
 
         [Fact]
+        private void GetClassContains_WithDefaultLifetime_Scoped()
+        {
+            // act
+            serviceCollection.ResolveDependencies();
+            serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IClassContainsDefaultLifetime service;
+
+            using (var scope = serviceProvider.CreateScope())
+            {
+                service = scope.ServiceProvider.GetService<IClassContainsDefaultLifetime>();
+            }
+
+            // assert
+            service.Should().NotBeNull().And.BeOfType<ClassContainsDefaultLifetime>();
+        }
+
+        [Fact]
         private void GetClass_WithDefaultLifetime_Scoped()
         {
             // act
